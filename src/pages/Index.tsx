@@ -61,9 +61,11 @@ const Index = () => {
       <main className="space-y-0"> {/* Remove spacing between sections */}
         <Hero />
         <About />
-        <Experience />
         <Projects />
         <Skills />
+        <Experience />
+       
+     
         <Contact />
       </main>
       <Footer />

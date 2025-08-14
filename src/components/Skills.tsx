@@ -384,9 +384,16 @@
 
 import React, { useEffect, useRef } from "react";
 import { cn } from "@/lib/utils";
+import { useScrollAnimation, useStaggeredScrollAnimation } from "@/hooks/useScrollAnimation";
 
 const Skills = () => {
   const sectionRef = useRef<HTMLDivElement>(null);
+  
+  // Enhanced scroll animations
+  const { elementRef: headerRef, isVisible: headerVisible } = useScrollAnimation({ delay: 100 });
+  const { containerRef: skillsRef, visibleItems: skillsVisible } = useStaggeredScrollAnimation(3, { delay: 200 });
+  const { elementRef: certsRef, isVisible: certsVisible } = useScrollAnimation({ delay: 300 });
+  const { elementRef: achievementsRef, isVisible: achievementsVisible } = useScrollAnimation({ delay: 400 });
 
   useEffect(() => {
     const observer = new IntersectionObserver(
@@ -475,23 +482,35 @@ const Skills = () => {
       ref={sectionRef}
     >
       <div className="px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto">
-        <div className="text-center mb-8 sm:mb-10">
-          <div className="pulse-chip mx-auto mb-3 sm:mb-4 opacity-0 fade-in-element">
+        <div className="text-center mb-8 sm:mb-10" ref={headerRef}>
+          <div className={cn(
+            "pulse-chip mx-auto mb-3 sm:mb-4 glass-morphism hover:animate-glow-pulse transition-all duration-700",
+            headerVisible ? "animate-bounce-in opacity-100" : "opacity-0"
+          )}>
             <span>Skills & Achievements</span>
           </div>
-          <h2 className="section-title mb-3 sm:mb-4 opacity-0 fade-in-element">
+          <h2 className={cn(
+            "section-title mb-3 sm:mb-4 gradient-text-orange font-display transition-all duration-700 delay-200",
+            headerVisible ? "animate-slide-in-from-bottom opacity-100" : "opacity-0"
+          )}>
             Technical Expertise & <br className="hidden sm:block" /> Accomplishments
           </h2>
-          <p className="section-subtitle mx-auto opacity-0 fade-in-element max-w-xl">
+          <p className={cn(
+            "section-subtitle mx-auto max-w-xl transition-all duration-700 delay-400",
+            headerVisible ? "animate-zoom-in opacity-100" : "opacity-0"
+          )}>
             A concise overview of my technical skills, certifications, and key achievements.
           </p>
         </div>
 
         {/* Skills Grid */}
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-5 mb-10">
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-5 mb-10" ref={skillsRef}>
           {skillCategories.map((category, index) => (
-            <div key={index} className="opacity-0 fade-in-element">
-              <div className="glass-card p-5 h-full border border-gray-200/50">
+            <div key={index} className={cn(
+              "transition-all duration-700",
+              skillsVisible[index] ? "animate-rotate-scale opacity-100" : "opacity-0"
+            )} style={{ animationDelay: `${index * 200}ms` }}>
+              <div className="glass-card-enhanced p-5 h-full hover-lift-rotate hover-glow-orange">
                 <div
                   className={cn(
                     "w-10 h-10 rounded-lg mb-3 flex items-center justify-center text-white bg-gradient-to-r shadow-sm",
@@ -521,7 +540,10 @@ const Skills = () => {
         {/* Certifications & Achievements */}
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
           {/* Certifications */}
-          <div className="opacity-0 fade-in-element">
+          <div className={cn(
+            "transition-all duration-700",
+            certsVisible ? "animate-slide-in-from-left opacity-100" : "opacity-0"
+          )} ref={certsRef}>
             <h3 className="text-xl font-semibold mb-4 text-gray-800">🎓 Certifications</h3>
             <div className="space-y-3">
               {certifications.map((cert, index) => (
@@ -560,7 +582,10 @@ const Skills = () => {
           </div>
 
           {/* Achievements */}
-          <div className="opacity-0 fade-in-element">
+          <div className={cn(
+            "transition-all duration-700 delay-300",
+            achievementsVisible ? "animate-slide-in-from-right opacity-100" : "opacity-0"
+          )} ref={achievementsRef}>
             <h3 className="text-xl font-semibold mb-4 text-gray-800">🏆 Achievements</h3>
             <div className="space-y-3">
               {achievements.map((achievement, index) => (

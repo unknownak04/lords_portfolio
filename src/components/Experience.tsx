@@ -191,10 +191,10 @@ const Experience = () => {
     <section className="py-12 sm:py-16 md:py-20 relative bg-white" id="experience" ref={sectionRef}>
       <div className="section-container">
         <div className="text-center mb-10 sm:mb-16">
-          <div className="pulse-chip mx-auto mb-3 sm:mb-4 opacity-0 fade-in-element">
+          <div className="pulse-chip mx-auto mb-3 sm:mb-4 opacity-0 fade-in-element glass-morphism hover:animate-glow-pulse">
             <span>Experience</span>
           </div>
-          <h2 className="section-title mb-3 sm:mb-4 opacity-0 fade-in-element">
+          <h2 className="section-title mb-3 sm:mb-4 opacity-0 fade-in-element gradient-text-orange font-display">
             Professional <br className="hidden sm:block" />Experience
           </h2>
           <p className="section-subtitle mx-auto opacity-0 fade-in-element">
@@ -204,7 +204,7 @@ const Experience = () => {
 
         <div className="max-w-4xl mx-auto">
           <div className="opacity-0 fade-in-element">
-            <div className="bg-white border border-gray-200 rounded-lg p-6 sm:p-8 shadow-sm">
+            <div className="glass-card-enhanced p-6 sm:p-8 hover-lift">
               <div className="flex items-start space-x-4">
                 <div className="rounded-full bg-gray-100 w-12 h-12 flex items-center justify-center text-gray-500 flex-shrink-0">
                   <Briefcase className="w-6 h-6" />

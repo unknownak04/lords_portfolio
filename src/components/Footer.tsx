@@ -8,7 +8,7 @@ const Footer = () => {
   return (
     <footer className="w-full bg-gray-900 text-white py-12">
       <div className="section-container">
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-8 mb-8">
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-6 sm:gap-8 mb-6 sm:mb-8">
           {/* Personal Info */}
           <div>
             <h3 className="text-xl font-semibold mb-4">Aavishkar Kamble</h3>
@@ -38,16 +38,16 @@ const Footer = () => {
             <div className="space-y-3">
               <a 
                 href="mailto:aavishkarkamble04@gmail.com" 
-                className="flex items-center space-x-2 text-gray-300 hover:text-pulse-400 transition-colors duration-200"
+                className="flex items-center space-x-2 text-gray-300 hover:text-pulse-400 transition-colors duration-200 text-sm sm:text-base break-all"
               >
-                <Mail className="w-4 h-4" />
+                <Mail className="w-4 h-4 flex-shrink-0" />
                 <span>aavishkarkamble04@gmail.com</span>
               </a>
               <a 
                 href="tel:+919325350688" 
-                className="flex items-center space-x-2 text-gray-300 hover:text-pulse-400 transition-colors duration-200"
+                className="flex items-center space-x-2 text-gray-300 hover:text-pulse-400 transition-colors duration-200 text-sm sm:text-base"
               >
-                <Phone className="w-4 h-4" />
+                <Phone className="w-4 h-4 flex-shrink-0" />
                 <span>+91-9325350688</span>
               </a>
             </div>

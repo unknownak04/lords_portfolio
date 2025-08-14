@@ -1,5 +1,5 @@
 
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import Navbar from "@/components/Navbar";
 import Hero from "@/components/Hero";
 import About from "@/components/About";
@@ -8,8 +8,35 @@ import Skills from "@/components/Skills";
 import Experience from "@/components/Experience";
 import Contact from "@/components/Contact";
 import Footer from "@/components/Footer";
+import PageLoader from "@/components/PageLoader";
+import { useTheme } from "@/contexts/ThemeContext";
 
 const Index = () => {
+  const [isLoading, setIsLoading] = useState(true);
+  const [showThemeSelector, setShowThemeSelector] = useState(true);
+  const { setTheme } = useTheme();
+
+  const handleThemeSelect = (selectedTheme: 'light' | 'dark') => {
+    setTheme(selectedTheme);
+    setShowThemeSelector(false);
+    
+    // Add a small delay before showing the main content
+    setTimeout(() => {
+      setIsLoading(false);
+    }, 1000);
+  };
+
+  // Skip theme selection if user has already selected a theme
+  useEffect(() => {
+    const savedTheme = localStorage.getItem('theme');
+    if (savedTheme) {
+      setShowThemeSelector(false);
+      setTimeout(() => {
+        setIsLoading(false);
+      }, 2000);
+    }
+  }, []);
+
   // Initialize intersection observer to detect when elements enter viewport
   useEffect(() => {
     const observer = new IntersectionObserver(
@@ -55,6 +82,10 @@ const Index = () => {
     });
   }, []);
 
+  if (isLoading || showThemeSelector) {
+    return <PageLoader onThemeSelect={handleThemeSelect} />;
+  }
+
   return (
     <div className="min-h-screen">
       <Navbar />
@@ -64,8 +95,6 @@ const Index = () => {
         <Projects />
         <Skills />
         <Experience />
-       
-     
         <Contact />
       </main>
       <Footer />

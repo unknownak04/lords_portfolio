@@ -184,17 +184,19 @@ const Hero = () => {
 
         backgroundImage: 'url("/Header-background.webp")',
 
-        backgroundPosition: 'center 30%', 
+        backgroundPosition: isMobile ? 'center center' : 'center 30%', 
 
-        height: '100vh',
+        height: isMobile ? 'auto' : '100vh',
+
+        minHeight: isMobile ? '100vh' : 'auto',
 
         paddingTop: isMobile ? '80px' : '100px', // Account for navbar
 
         paddingBottom: isMobile ? '40px' : '60px',
 
-        paddingLeft: isMobile ? '12px' : '20px',
+        paddingLeft: isMobile ? '16px' : '20px',
 
-        paddingRight: isMobile ? '12px' : '20px'
+        paddingRight: isMobile ? '16px' : '20px'
 
       }}
 
@@ -212,15 +214,15 @@ const Hero = () => {
 
               <div 
 
-                className="pulse-chip mb-3 sm:mb-6 opacity-0 animate-fade-in inline-flex items-center px-3 py-1.5 text-sm rounded-full" 
+                className="pulse-chip mb-3 sm:mb-6 opacity-0 animate-slide-in-up inline-flex items-center px-4 py-2 text-sm rounded-full glass-morphism hover:animate-glow-pulse" 
 
                 style={{ animationDelay: "0.1s" }}
 
               >
 
-                <span className="inline-flex items-center justify-center w-5 h-5 rounded-full bg-pulse-500 text-white mr-2 text-xs">👋</span>
+                <span className="inline-flex items-center justify-center w-6 h-6 rounded-full bg-gradient-to-r from-orange-500 to-orange-600 text-white mr-2 text-xs animate-float">👋</span>
 
-                <span>Hello! I'm Aavishkar</span>
+                <span className="font-medium">Hello! I'm Aavishkar</span>
 
               </div>
 
@@ -228,13 +230,15 @@ const Hero = () => {
 
             <h1 
 
-              className="section-title text-3xl sm:text-4xl lg:text-5xl xl:text-6xl leading-tight opacity-0 animate-fade-in" 
+              className="section-title text-3xl sm:text-4xl lg:text-5xl xl:text-6xl leading-tight opacity-0 animate-slide-in-left gradient-text-orange font-display" 
 
               style={{ animationDelay: "0.3s" }}
 
             >
 
-              Aavishkar Kamble<br className="hidden sm:inline" />Full Stack Developer
+              Aavishkar Kamble<br className="hidden sm:inline" />
+
+              <span className="gradient-text-warm">Full Stack Developer</span>
 
             </h1>
 
@@ -244,7 +248,7 @@ const Hero = () => {
 
               style={{ animationDelay: "0.5s" }} 
 
-              className="section-subtitle mt-3 sm:mt-6 mb-4 sm:mb-8 leading-relaxed opacity-0 animate-fade-in text-gray-950 font-normal text-base sm:text-lg text-left"
+              className="section-subtitle mt-3 sm:mt-6 mb-4 sm:mb-8 leading-relaxed opacity-0 animate-slide-in-right text-gray-700 font-normal text-base sm:text-lg text-left"
 
             >
 
@@ -256,7 +260,7 @@ const Hero = () => {
 
             <div 
 
-              className="flex flex-col sm:flex-row gap-4 opacity-0 animate-fade-in" 
+              className="flex flex-col sm:flex-row gap-4 opacity-0 animate-scale-in" 
 
               style={{ animationDelay: "0.7s" }}
 
@@ -280,13 +284,15 @@ const Hero = () => {
 
                   cursor: 'pointer',
 
-                  fontSize: '14px',
+                  fontSize: isMobile ? '16px' : '14px',
 
                   lineHeight: '20px',
 
-                  padding: '16px 24px',
+                  padding: isMobile ? '18px 28px' : '16px 24px',
 
                   border: '1px solid white',
+
+                  minHeight: isMobile ? '48px' : 'auto',
 
                 }}
 
@@ -316,13 +322,15 @@ const Hero = () => {
 
                   cursor: 'pointer',
 
-                  fontSize: '14px',
+                  fontSize: isMobile ? '16px' : '14px',
 
                   lineHeight: '20px',
 
-                  padding: '16px 24px',
+                  padding: isMobile ? '18px 28px' : '16px 24px',
 
                   border: '1px solid #d1d5db',
+
+                  minHeight: isMobile ? '48px' : 'auto',
 
                 }}
 

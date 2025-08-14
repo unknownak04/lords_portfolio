@@ -1,9 +1,15 @@
 import React, { useEffect, useRef } from "react";
 import { cn } from "@/lib/utils";
 import { Mail, Phone, Linkedin, Github, MapPin, Send } from "lucide-react";
+import { useScrollAnimation, useStaggeredScrollAnimation } from "@/hooks/useScrollAnimation";
 
 const Contact = () => {
   const sectionRef = useRef<HTMLDivElement>(null);
+  
+  // Enhanced scroll animations
+  const { elementRef: headerRef, isVisible: headerVisible } = useScrollAnimation({ delay: 100 });
+  const { elementRef: contentRef, isVisible: contentVisible } = useScrollAnimation({ delay: 300 });
+  const { containerRef: contactInfoRef, visibleItems: contactInfoVisible } = useStaggeredScrollAnimation(4, { delay: 150 });
   
   useEffect(() => {
     const observer = new IntersectionObserver(
@@ -64,35 +70,51 @@ const Contact = () => {
   return (
     <section className="py-12 sm:py-16 md:py-20 relative bg-white" id="contact" ref={sectionRef}>
       <div className="section-container">
-        <div className="text-center mb-10 sm:mb-16">
-          <div className="pulse-chip mx-auto mb-3 sm:mb-4 opacity-0 fade-in-element">
+        <div className="text-center mb-10 sm:mb-16" ref={headerRef}>
+          <div className={cn(
+            "pulse-chip mx-auto mb-3 sm:mb-4 glass-morphism hover:animate-glow-pulse transition-all duration-700",
+            headerVisible ? "animate-bounce-in opacity-100" : "opacity-0"
+          )}>
             <span>Contact</span>
           </div>
-          <h2 className="section-title mb-3 sm:mb-4 opacity-0 fade-in-element">
+          <h2 className={cn(
+            "section-title mb-3 sm:mb-4 gradient-text-orange font-display transition-all duration-700 delay-200",
+            headerVisible ? "animate-slide-in-from-bottom opacity-100" : "opacity-0"
+          )}>
             Let's Work <br className="hidden sm:block" />Together
           </h2>
-          <p className="section-subtitle mx-auto opacity-0 fade-in-element">
+          <p className={cn(
+            "section-subtitle mx-auto transition-all duration-700 delay-400",
+            headerVisible ? "animate-zoom-in opacity-100" : "opacity-0"
+          )}>
             Ready to start your next project? Let's connect and discuss how we can bring your ideas to life.
           </p>
         </div>
 
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-12 max-w-6xl mx-auto">
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 sm:gap-8 lg:gap-12 max-w-6xl mx-auto" ref={contentRef}>
           {/* Contact Information */}
-          <div className="opacity-0 fade-in-element">
+          <div className={cn(
+            "transition-all duration-700",
+            contentVisible ? "animate-slide-in-from-left opacity-100" : "opacity-0"
+          )}>
             <h3 className="text-2xl font-semibold mb-6 text-gray-800">Get in Touch</h3>
             <p className="text-gray-600 mb-8 leading-relaxed">
               I'm always open to discussing new opportunities, collaborating on exciting projects, 
               or just having a chat about technology. Feel free to reach out!
             </p>
             
-            <div className="space-y-4">
+            <div className="space-y-4" ref={contactInfoRef}>
               {contactInfo.map((contact, index) => (
                 <a
                   key={index}
                   href={contact.href}
                   target={contact.href.startsWith('http') ? '_blank' : undefined}
                   rel={contact.href.startsWith('http') ? 'noopener noreferrer' : undefined}
-                  className="flex items-center space-x-4 p-4 glass-card hover:shadow-elegant-hover transition-all duration-300 group"
+                  className={cn(
+                    "flex items-center space-x-4 p-4 glass-card-enhanced hover-lift-rotate hover-glow-orange transition-all duration-700 group",
+                    contactInfoVisible[index] ? "animate-slide-in-from-right opacity-100" : "opacity-0"
+                  )}
+                  style={{ animationDelay: `${index * 150}ms` }}
                 >
                   <div className="rounded-full bg-pulse-50 w-12 h-12 flex items-center justify-center text-pulse-500 group-hover:bg-pulse-100 transition-colors duration-200">
                     {contact.icon}
@@ -116,11 +138,14 @@ const Contact = () => {
           </div>
 
           {/* Contact Form */}
-          <div className="opacity-0 fade-in-element">
-            <div className="glass-card p-6 sm:p-8">
+          <div className={cn(
+            "transition-all duration-700 delay-300",
+            contentVisible ? "animate-slide-in-from-right opacity-100" : "opacity-0"
+          )}>
+            <div className="glass-card-enhanced p-6 sm:p-8 hover-lift-rotate">
               <h3 className="text-2xl font-semibold mb-6 text-gray-800">Send a Message</h3>
               <form className="space-y-6">
-                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-4">
                   <div>
                     <label htmlFor="name" className="block text-sm font-medium text-gray-700 mb-2">
                       Name
@@ -129,7 +154,7 @@ const Contact = () => {
                       type="text"
                       id="name"
                       name="name"
-                      className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-pulse-500 focus:border-transparent transition-colors duration-200"
+                      className="w-full px-3 sm:px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-pulse-500 focus:border-transparent transition-colors duration-200 text-base"
                       placeholder="Your Name"
                     />
                   </div>
@@ -141,7 +166,7 @@ const Contact = () => {
                       type="email"
                       id="email"
                       name="email"
-                      className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-pulse-500 focus:border-transparent transition-colors duration-200"
+                      className="w-full px-3 sm:px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-pulse-500 focus:border-transparent transition-colors duration-200 text-base"
                       placeholder="your.email@example.com"
                     />
                   </div>
@@ -155,7 +180,7 @@ const Contact = () => {
                     type="text"
                     id="subject"
                     name="subject"
-                    className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-pulse-500 focus:border-transparent transition-colors duration-200"
+                    className="w-full px-3 sm:px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-pulse-500 focus:border-transparent transition-colors duration-200 text-base"
                     placeholder="Project Discussion"
                   />
                 </div>
@@ -168,14 +193,14 @@ const Contact = () => {
                     id="message"
                     name="message"
                     rows={5}
-                    className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-pulse-500 focus:border-transparent transition-colors duration-200 resize-none"
+                    className="w-full px-3 sm:px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-pulse-500 focus:border-transparent transition-colors duration-200 resize-none text-base"
                     placeholder="Tell me about your project or just say hello!"
                   ></textarea>
                 </div>
                 
                 <button
                   type="submit"
-                  className="w-full flex items-center justify-center space-x-2 bg-pulse-500 hover:bg-pulse-600 text-white font-medium py-3 px-6 rounded-lg transition-all duration-300 shadow-md hover:shadow-lg transform hover:scale-[1.02] active:scale-[0.98]"
+                  className="w-full flex items-center justify-center space-x-2 glass-button text-white font-medium py-3 px-6 rounded-lg transition-all duration-300 shadow-md hover:shadow-lg transform hover:scale-[1.02] active:scale-[0.98]"
                 >
                   <Send className="w-4 h-4" />
                   <span>Send Message</span>

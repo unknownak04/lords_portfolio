@@ -142,6 +142,7 @@
 import React, { useEffect, useRef, useState } from "react";
 import { cn } from "@/lib/utils";
 import { GraduationCap, MapPin, Calendar } from "lucide-react";
+import { useScrollAnimation, useStaggeredScrollAnimation } from "@/hooks/useScrollAnimation";
 
 const About = () => {
   const sectionRef = useRef<HTMLDivElement>(null);
@@ -149,6 +150,11 @@ const About = () => {
   const [showUnderline, setShowUnderline] = useState(false);
   
   const fullText = "Bachelor's in Information Technology (B.E)";
+  
+  // Enhanced scroll animations
+  const { elementRef: headerRef, isVisible: headerVisible } = useScrollAnimation({ delay: 100 });
+  const { elementRef: contentRef, isVisible: contentVisible } = useScrollAnimation({ delay: 300 });
+  const { containerRef: educationRef, visibleItems: educationVisible } = useStaggeredScrollAnimation(3, { delay: 150 });
   
   useEffect(() => {
     const observer = new IntersectionObserver(
@@ -222,23 +228,35 @@ const About = () => {
   return (
     <section className="py-12 sm:py-16 md:py-20 relative bg-white" id="about" ref={sectionRef}>
       <div className="section-container">
-        <div className="text-center mb-10 sm:mb-16">
-          <div className="pulse-chip mx-auto mb-3 sm:mb-4 opacity-0 fade-in-element">
+        <div className="text-center mb-10 sm:mb-16" ref={headerRef}>
+          <div className={cn(
+            "pulse-chip mx-auto mb-3 sm:mb-4 glass-morphism hover:animate-glow-pulse transition-all duration-700",
+            headerVisible ? "animate-bounce-in opacity-100" : "opacity-0"
+          )}>
             <span>About Me</span>
           </div>
-          <h2 className="section-title mb-3 sm:mb-4 opacity-0 fade-in-element">
+          <h2 className={cn(
+            "section-title mb-3 sm:mb-4 gradient-text-orange font-display transition-all duration-700 delay-200",
+            headerVisible ? "animate-slide-in-from-left opacity-100" : "opacity-0"
+          )}>
             Passionate About <br className="hidden sm:block" />Technology & Innovation
           </h2>
-          <p className="section-subtitle mx-auto opacity-0 fade-in-element max-w-3xl">
+          <p className={cn(
+            "section-subtitle mx-auto max-w-3xl transition-all duration-700 delay-400",
+            headerVisible ? "animate-slide-in-from-right opacity-100" : "opacity-0"
+          )}>
             I'm a dedicated Computer Science graduate with expertise in full-stack development, 
             machine learning, and modern web technologies. Always eager to learn and tackle new challenges.
           </p>
         </div>
 
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-12 items-start">
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-12 items-start" ref={contentRef}>
           {/* Personal Info with 3D Glass Effect */}
-          <div className="opacity-0 fade-in-element">
-            <div className="glass-3d-card p-6 sm:p-8">
+          <div className={cn(
+            "transition-all duration-700",
+            contentVisible ? "animate-slide-in-from-left opacity-100" : "opacity-0"
+          )}>
+            <div className="glass-card-enhanced p-6 sm:p-8 hover-lift-rotate">
               <h3 className="text-2xl font-semibold mb-6 text-gray-800 relative">
                 Get to know me
                 <div className="absolute -bottom-2 left-0 w-16 h-0.5 bg-gradient-to-r from-pulse-500 to-pulse-300 rounded-full"></div>
@@ -268,15 +286,21 @@ const About = () => {
           </div>
 
           {/* Education with Enhanced 3D Cards */}
-          <div className="opacity-0 fade-in-element">
-            <div className="glass-3d-card p-6 sm:p-8">
+          <div className={cn(
+            "transition-all duration-700 delay-300",
+            contentVisible ? "animate-slide-in-from-right opacity-100" : "opacity-0"
+          )}>
+            <div className="glass-card-enhanced p-6 sm:p-8 hover-lift-rotate">
               <h3 className="text-2xl font-semibold mb-6 text-gray-800 relative">
                 Education
                 <div className="absolute -bottom-2 left-0 w-20 h-0.5 bg-gradient-to-r from-pulse-500 to-pulse-300 rounded-full"></div>
               </h3>
-              <div className="space-y-6">
+              <div className="space-y-6" ref={educationRef}>
                 {education.map((edu, index) => (
-                  <div key={index} className={`education-card ${edu.isLatest ? 'featured-card' : ''}`}>
+                  <div key={index} className={cn(
+                    `education-card ${edu.isLatest ? 'featured-card' : ''} transition-all duration-700`,
+                    educationVisible[index] ? "animate-zoom-in opacity-100" : "opacity-0"
+                  )} style={{ animationDelay: `${index * 150}ms` }}>
                     <div className="flex items-start space-x-4">
                       <div className="education-icon">
                         <GraduationCap className="w-5 h-5" />

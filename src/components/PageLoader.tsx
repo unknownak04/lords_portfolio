@@ -1,331 +1,344 @@
+// import React, { useState, useEffect } from 'react';
+
+// interface PageLoaderProps {
+//   onThemeSelect?: (theme: 'light' | 'dark') => void;
+// }
+
+// const PageLoader: React.FC<PageLoaderProps> = ({ onThemeSelect }) => {
+//   const [progress, setProgress] = useState(0);
+
+//   useEffect(() => {
+//     const progressInterval = setInterval(() => {
+//       setProgress(prev => {
+//         if (prev >= 100) {
+//           clearInterval(progressInterval);
+//           setTimeout(() => {
+//             onThemeSelect?.('light'); // Always use light mode
+//           }, 500);
+//           return 100;
+//         }
+//         return prev + 2;
+//       });
+//     }, 50);
+
+//     return () => {
+//       clearInterval(progressInterval);
+//     };
+//   }, [onThemeSelect]);
+
+//   return (
+//     <div className="fixed inset-0 z-50 flex items-center justify-center bg-white">
+//       <div className="text-center">
+//         <h1 className="text-4xl font-bold text-black mb-8">
+//           Loading
+//         </h1>
+        
+//         {/* Simple progress bar */}
+//         <div className="w-64 mx-auto">
+//           <div className="h-1 bg-gray-200 rounded-full overflow-hidden">
+//             <div 
+//               className="h-full bg-black rounded-full transition-all duration-300 ease-out"
+//               style={{ width: `${progress}%` }}
+//             />
+//           </div>
+//           <div className="mt-2 text-sm text-gray-600">
+//             {Math.round(progress)}%
+//           </div>
+//         </div>
+//       </div>
+//     </div>
+//   );
+// };
+
+// export default PageLoader;
+
 import React, { useState, useEffect } from 'react';
-import { Sun, Moon } from 'lucide-react';
 
 interface PageLoaderProps {
   onThemeSelect?: (theme: 'light' | 'dark') => void;
 }
 
-const RocketIcon: React.FC<{ className?: string }> = ({ className = "" }) => (
-  <svg
-    viewBox="0 0 100 100"
-    className={className}
-    fill="none"
-    xmlns="http://www.w3.org/2000/svg"
-  >
-    {/* Rocket Body */}
-    <path
-      d="M50 10 L60 70 L50 75 L40 70 Z"
-      fill="currentColor"
-      opacity="0.8"
-    />
-    {/* Rocket Nose */}
-    <path
-      d="M50 10 L45 25 L55 25 Z"
-      fill="currentColor"
-    />
-    {/* Rocket Fins */}
-    <path
-      d="M40 60 L35 75 L40 70 Z"
-      fill="currentColor"
-      opacity="0.6"
-    />
-    <path
-      d="M60 60 L65 75 L60 70 Z"
-      fill="currentColor"
-      opacity="0.6"
-    />
-    {/* Window */}
-    <circle
-      cx="50"
-      cy="35"
-      r="4"
-      fill="currentColor"
-      opacity="0.3"
-    />
-  </svg>
-);
-
 const PageLoader: React.FC<PageLoaderProps> = ({ onThemeSelect }) => {
   const [progress, setProgress] = useState(0);
-  const [currentStep, setCurrentStep] = useState(0);
-  const [showThemeSelector, setShowThemeSelector] = useState(false);
-  const [selectedTheme, setSelectedTheme] = useState<'light' | 'dark' | null>(null);
-  const [rocketPosition, setRocketPosition] = useState(0);
-  
-  const loadingSteps = [
-    { text: "Initializing systems...", icon: "🔧" },
-    { text: "Loading components...", icon: "⚙️" },
-    { text: "Preparing launch...", icon: "🚀" },
-    { text: "Final checks...", icon: "✅" },
-    { text: "Ready for takeoff!", icon: "🌟" }
-  ];
+  const [rotation, setRotation] = useState(0);
 
   useEffect(() => {
     const progressInterval = setInterval(() => {
       setProgress(prev => {
         if (prev >= 100) {
           clearInterval(progressInterval);
-          setTimeout(() => setShowThemeSelector(true), 800);
+          setTimeout(() => {
+            onThemeSelect?.('light');
+          }, 500);
           return 100;
         }
-        return prev + 1.2;
+        return prev + 2;
       });
-    }, 40);
-
-    const stepInterval = setInterval(() => {
-      setCurrentStep(prev => (prev + 1) % loadingSteps.length);
-    }, 1000);
-
-    const rocketInterval = setInterval(() => {
-      setRocketPosition(prev => (prev + 0.5) % 100);
     }, 50);
+
+    const rotationInterval = setInterval(() => {
+      setRotation(prev => prev + 1);
+    }, 20);
 
     return () => {
       clearInterval(progressInterval);
-      clearInterval(stepInterval);
-      clearInterval(rocketInterval);
+      clearInterval(rotationInterval);
     };
-  }, []);
-
-  const handleThemeSelect = (theme: 'light' | 'dark') => {
-    setSelectedTheme(theme);
-    setTimeout(() => {
-      onThemeSelect?.(theme);
-    }, 1000);
-  };
-
-  if (showThemeSelector && !selectedTheme) {
-    return (
-      <div className="fixed inset-0 z-50 flex items-center justify-center bg-gradient-to-br from-gray-100 via-gray-50 to-white dark:from-slate-900 dark:via-slate-800 dark:to-slate-900 overflow-hidden">
-        {/* Subtle Background Pattern */}
-        <div className="absolute inset-0 opacity-5">
-          <div 
-            className="w-full h-full"
-            style={{
-              backgroundImage: `
-                radial-gradient(circle at 25% 25%, rgba(0, 0, 0, 0.1) 0%, transparent 50%),
-                radial-gradient(circle at 75% 75%, rgba(0, 0, 0, 0.05) 0%, transparent 50%)
-              `
-            }}
-          />
-        </div>
-
-        {/* Theme Selection */}
-        <div className="relative z-10 text-center">
-          <div className="mb-8 animate-bounce-in">
-            <div className="relative">
-              <img 
-                src="/logs.png" 
-                alt="Aavishkar Kamble" 
-                className="h-20 sm:h-24 mx-auto opacity-90 drop-shadow-lg animate-float" 
-              />
-            </div>
-          </div>
-
-          <h2 className="text-3xl sm:text-4xl font-bold text-gray-800 dark:text-white mb-4 animate-slide-in-from-bottom font-display">
-            Choose Your Experience
-          </h2>
-          
-          <p className="text-lg text-gray-600 dark:text-gray-300 mb-12 animate-slide-in-from-bottom delay-200">
-            Select your preferred theme
-          </p>
-
-          <div className="flex flex-col sm:flex-row gap-6 justify-center items-center animate-scale-in delay-400">
-            {/* Light Mode */}
-            <button
-              onClick={() => handleThemeSelect('light')}
-              className="group relative p-6 bg-white border-2 border-gray-200 rounded-2xl hover:border-gray-300 transition-all duration-300 hover:scale-105 hover:shadow-lg min-w-[180px]"
-            >
-              <div className="w-12 h-12 mx-auto mb-4 bg-gray-100 rounded-xl flex items-center justify-center shadow-sm group-hover:shadow-md transition-all duration-300">
-                <Sun className="w-6 h-6 text-gray-700 group-hover:rotate-180 transition-transform duration-500" />
-              </div>
-              <h3 className="text-xl font-bold text-gray-800 mb-2">Light Mode</h3>
-              <p className="text-gray-600 text-sm">Clean & Bright</p>
-            </button>
-
-            {/* Dark Mode */}
-            <button
-              onClick={() => handleThemeSelect('dark')}
-              className="group relative p-6 bg-gray-900 border-2 border-gray-700 rounded-2xl hover:border-gray-600 transition-all duration-300 hover:scale-105 hover:shadow-lg min-w-[180px]"
-            >
-              <div className="w-12 h-12 mx-auto mb-4 bg-gray-800 rounded-xl flex items-center justify-center shadow-sm group-hover:shadow-md transition-all duration-300">
-                <Moon className="w-6 h-6 text-gray-300 group-hover:-rotate-12 transition-transform duration-500" />
-              </div>
-              <h3 className="text-xl font-bold text-white mb-2">Dark Mode</h3>
-              <p className="text-gray-400 text-sm">Sleek & Modern</p>
-            </button>
-          </div>
-
-          <div className="mt-8 animate-fade-in delay-600">
-            <p className="text-sm text-gray-500 dark:text-gray-400">
-              You can change this anytime in the navigation bar
-            </p>
-          </div>
-        </div>
-      </div>
-    );
-  }
-
-  if (selectedTheme) {
-    return (
-      <div className="fixed inset-0 z-50 flex items-center justify-center bg-gradient-to-br from-gray-100 via-gray-50 to-white dark:from-slate-900 dark:via-slate-800 dark:to-slate-900 overflow-hidden">
-        <div className="text-center animate-zoom-in">
-          <div className="w-20 h-20 mx-auto mb-6 relative">
-            <div className="absolute inset-0 border-2 border-gray-300 dark:border-gray-600 rounded-full animate-spin"></div>
-            <div className="absolute inset-2 bg-gray-100 dark:bg-slate-800 rounded-full flex items-center justify-center">
-              {selectedTheme === 'light' ? (
-                <Sun className="w-6 h-6 text-gray-700 animate-pulse" />
-              ) : (
-                <Moon className="w-6 h-6 text-gray-300 animate-pulse" />
-              )}
-            </div>
-          </div>
-          <h3 className="text-xl font-bold text-gray-800 dark:text-white mb-2">
-            Loading {selectedTheme === 'light' ? 'Light' : 'Dark'} Mode...
-          </h3>
-          <p className="text-gray-600 dark:text-gray-300">Preparing your experience</p>
-        </div>
-      </div>
-    );
-  }
+  }, [onThemeSelect]);
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center bg-gradient-to-br from-gray-100 via-gray-50 to-white overflow-hidden">
-      {/* Subtle Background Elements */}
-      <div className="absolute inset-0">
-        {/* Floating Dots */}
-        {Array.from({ length: 12 }).map((_, i) => (
-          <div
-            key={i}
-            className="absolute w-1 h-1 bg-gray-400 rounded-full opacity-30 animate-float"
-            style={{
-              left: `${Math.random() * 100}%`,
-              top: `${Math.random() * 100}%`,
-              animationDelay: `${Math.random() * 3}s`,
-              animationDuration: `${4 + Math.random() * 2}s`
-            }}
-          />
-        ))}
+    <div className="fixed inset-0 z-50 flex items-center justify-center bg-white overflow-hidden">
+      {/* Technical grid overlay */}
+      <svg className="absolute inset-0 w-full h-full opacity-5">
+        <defs>
+          <pattern id="grid" width="20" height="20" patternUnits="userSpaceOnUse">
+            <path d="M 20 0 L 0 0 0 20" fill="none" stroke="black" strokeWidth="0.5" />
+          </pattern>
+          <pattern id="dots" width="40" height="40" patternUnits="userSpaceOnUse">
+            <circle cx="20" cy="20" r="0.5" fill="black" />
+          </pattern>
+        </defs>
+        <rect width="100%" height="100%" fill="url(#grid)" />
+        <rect width="100%" height="100%" fill="url(#dots)" />
+      </svg>
 
-        {/* Subtle Grid Pattern */}
-        <div className="absolute inset-0 opacity-5">
-          <div 
-            className="w-full h-full"
-            style={{
-              backgroundImage: `
-                linear-gradient(rgba(0, 0, 0, 0.1) 1px, transparent 1px),
-                linear-gradient(90deg, rgba(0, 0, 0, 0.1) 1px, transparent 1px)
-              `,
-              backgroundSize: '40px 40px'
-            }}
-          />
+      {/* Orbital mechanics diagram */}
+      <div className="absolute inset-0 flex items-center justify-center">
+        <svg className="w-[600px] h-[600px]" viewBox="0 0 600 600">
+          {/* Orbital paths */}
+          <g transform="translate(300,300)">
+            {/* Elliptical orbits */}
+            <ellipse cx="0" cy="0" rx="250" ry="180" fill="none" stroke="black" strokeWidth="0.5" 
+              opacity="0.2" transform={`rotate(${rotation * 0.5})`} />
+            <ellipse cx="0" cy="0" rx="200" ry="140" fill="none" stroke="black" strokeWidth="0.5" 
+              opacity="0.3" transform={`rotate(${-rotation * 0.7})`} />
+            <ellipse cx="0" cy="0" rx="150" ry="100" fill="none" stroke="black" strokeWidth="0.5" 
+              opacity="0.4" transform={`rotate(${rotation})`} />
+            
+            {/* Orbital nodes */}
+            <circle cx={Math.cos(rotation * 0.01) * 250} cy={Math.sin(rotation * 0.01) * 180} 
+              r="3" fill="black" opacity={progress > 20 ? 0.8 : 0.2} />
+            <circle cx={Math.cos(-rotation * 0.015) * 200} cy={Math.sin(-rotation * 0.015) * 140} 
+              r="2" fill="black" opacity={progress > 40 ? 0.8 : 0.2} />
+            <circle cx={Math.cos(rotation * 0.02) * 150} cy={Math.sin(rotation * 0.02) * 100} 
+              r="2" fill="black" opacity={progress > 60 ? 0.8 : 0.2} />
+          </g>
+        </svg>
+      </div>
+
+      {/* Main technical schematic */}
+      <div className="relative z-10">
+        <svg className="w-[400px] h-[400px]" viewBox="0 0 400 400">
+          {/* Starship technical drawing */}
+          <g transform="translate(200,200)">
+            {/* Main vehicle structure */}
+            <g opacity={progress > 10 ? 1 : 0.2} style={{ transition: 'opacity 0.5s' }}>
+              {/* Fuselage cross-section */}
+              <rect x="-20" y="-80" width="40" height="120" fill="none" stroke="black" strokeWidth="1.5" />
+              
+              {/* Internal structure lines */}
+              <line x1="-20" y1="-60" x2="20" y2="-60" stroke="black" strokeWidth="0.5" />
+              <line x1="-20" y1="-40" x2="20" y2="-40" stroke="black" strokeWidth="0.5" />
+              <line x1="-20" y1="-20" x2="20" y2="-20" stroke="black" strokeWidth="0.5" />
+              <line x1="-20" y1="0" x2="20" y2="0" stroke="black" strokeWidth="0.5" />
+              <line x1="-20" y1="20" x2="20" y2="20" stroke="black" strokeWidth="0.5" />
+              
+              {/* Nose cone geometry */}
+              <path d="M -20 -80 L 0 -110 L 20 -80" fill="none" stroke="black" strokeWidth="1.5" />
+              <line x1="0" y1="-110" x2="0" y2="-80" stroke="black" strokeWidth="0.5" strokeDasharray="2,2" />
+            </g>
+
+            {/* Engine cluster schematic */}
+            <g opacity={progress > 30 ? 1 : 0.2} style={{ transition: 'opacity 0.5s' }}>
+              {/* Center engine */}
+              <circle cx="0" cy="50" r="8" fill="none" stroke="black" strokeWidth="1" />
+              <circle cx="0" cy="50" r="6" fill="none" stroke="black" strokeWidth="0.5" />
+              
+              {/* Outer engines in hexagonal pattern */}
+              {[0, 60, 120, 180, 240, 300].map((angle, i) => (
+                <g key={i} transform={`rotate(${angle})`}>
+                  <circle cx="0" cy="65" r="6" fill="none" stroke="black" strokeWidth="1" />
+                  <circle cx="0" cy="65" r="4" fill="none" stroke="black" strokeWidth="0.5" />
+                  <line x1="0" y1="50" x2="0" y2="59" stroke="black" strokeWidth="0.5" />
+                </g>
+              ))}
+              
+              {/* Gimbal range indicators */}
+              <path d="M -15 45 A 15 15 0 0 1 15 45" fill="none" stroke="black" strokeWidth="0.3" strokeDasharray="1,2" />
+            </g>
+
+            {/* Grid fins technical detail */}
+            <g opacity={progress > 50 ? 1 : 0.2} style={{ transition: 'opacity 0.5s' }}>
+              {/* Left fin */}
+              <g transform="translate(-35, -50)">
+                <rect x="0" y="0" width="12" height="20" fill="none" stroke="black" strokeWidth="1" />
+                <line x1="3" y1="0" x2="3" y2="20" stroke="black" strokeWidth="0.5" />
+                <line x1="6" y1="0" x2="6" y2="20" stroke="black" strokeWidth="0.5" />
+                <line x1="9" y1="0" x2="9" y2="20" stroke="black" strokeWidth="0.5" />
+                <line x1="0" y1="5" x2="12" y2="5" stroke="black" strokeWidth="0.5" />
+                <line x1="0" y1="10" x2="12" y2="10" stroke="black" strokeWidth="0.5" />
+                <line x1="0" y1="15" x2="12" y2="15" stroke="black" strokeWidth="0.5" />
+              </g>
+              
+              {/* Right fin */}
+              <g transform="translate(23, -50)">
+                <rect x="0" y="0" width="12" height="20" fill="none" stroke="black" strokeWidth="1" />
+                <line x1="3" y1="0" x2="3" y2="20" stroke="black" strokeWidth="0.5" />
+                <line x1="6" y1="0" x2="6" y2="20" stroke="black" strokeWidth="0.5" />
+                <line x1="9" y1="0" x2="9" y2="20" stroke="black" strokeWidth="0.5" />
+                <line x1="0" y1="5" x2="12" y2="5" stroke="black" strokeWidth="0.5" />
+                <line x1="0" y1="10" x2="12" y2="10" stroke="black" strokeWidth="0.5" />
+                <line x1="0" y1="15" x2="12" y2="15" stroke="black" strokeWidth="0.5" />
+              </g>
+            </g>
+
+            {/* Heat shield tiles pattern */}
+            <g opacity={progress > 70 ? 1 : 0.2} style={{ transition: 'opacity 0.5s' }}>
+              {[...Array(8)].map((_, i) => (
+                <g key={i}>
+                  <rect x="-10" y={-70 + i * 10} width="5" height="8" 
+                    fill="none" stroke="black" strokeWidth="0.3" />
+                  <rect x="-5" y={-70 + i * 10} width="5" height="8" 
+                    fill="none" stroke="black" strokeWidth="0.3" />
+                  <rect x="0" y={-70 + i * 10} width="5" height="8" 
+                    fill="none" stroke="black" strokeWidth="0.3" />
+                  <rect x="5" y={-70 + i * 10} width="5" height="8" 
+                    fill="none" stroke="black" strokeWidth="0.3" />
+                </g>
+              ))}
+            </g>
+
+            {/* Technical annotations and measurements */}
+            <g opacity={progress > 40 ? 0.5 : 0} style={{ transition: 'opacity 0.5s' }}>
+              {/* Dimension lines */}
+              <line x1="-40" y1="-110" x2="-40" y2="80" stroke="black" strokeWidth="0.3" />
+              <line x1="-42" y1="-110" x2="-38" y2="-110" stroke="black" strokeWidth="0.3" />
+              <line x1="-42" y1="80" x2="-38" y2="80" stroke="black" strokeWidth="0.3" />
+              
+              <line x1="-30" y1="90" x2="30" y2="90" stroke="black" strokeWidth="0.3" />
+              <line x1="-30" y1="88" x2="-30" y2="92" stroke="black" strokeWidth="0.3" />
+              <line x1="30" y1="88" x2="30" y2="92" stroke="black" strokeWidth="0.3" />
+              
+              {/* Angular measurements */}
+              <path d="M 30 -50 A 50 50 0 0 1 50 -30" fill="none" stroke="black" strokeWidth="0.3" />
+              <circle cx="35" cy="-45" r="1" fill="black" />
+              <circle cx="45" cy="-35" r="1" fill="black" />
+            </g>
+
+            {/* Trajectory calculations visualization */}
+            <g opacity={progress > 60 ? 1 : 0} style={{ transition: 'opacity 0.5s' }}>
+              <path d="M -100 30 Q -50 -20 0 -40 Q 50 -60 100 -30" 
+                fill="none" stroke="black" strokeWidth="0.5" strokeDasharray="4,2" />
+              <circle cx={-100 + progress * 2} cy={30 - progress * 0.7} r="2" fill="black" />
+            </g>
+
+            {/* Aerodynamic flow lines */}
+            <g opacity={progress > 80 ? 0.3 : 0} style={{ transition: 'opacity 0.5s' }}>
+              <path d="M -60 -100 Q -25 -90 -25 -70" fill="none" stroke="black" strokeWidth="0.5" />
+              <path d="M -60 -80 Q -25 -75 -25 -60" fill="none" stroke="black" strokeWidth="0.5" />
+              <path d="M -60 -60 Q -25 -60 -25 -50" fill="none" stroke="black" strokeWidth="0.5" />
+              <path d="M 60 -100 Q 25 -90 25 -70" fill="none" stroke="black" strokeWidth="0.5" />
+              <path d="M 60 -80 Q 25 -75 25 -60" fill="none" stroke="black" strokeWidth="0.5" />
+              <path d="M 60 -60 Q 25 -60 25 -50" fill="none" stroke="black" strokeWidth="0.5" />
+            </g>
+          </g>
+
+          {/* Complex geometric overlays */}
+          <g opacity="0.2">
+            {/* Golden ratio spiral */}
+            <path d="M 200 200 Q 250 200 250 150 Q 250 100 200 100 Q 150 100 150 150 Q 150 250 250 250"
+              fill="none" stroke="black" strokeWidth="0.5" />
+            
+            {/* Technical circles */}
+            <circle cx="200" cy="200" r="180" fill="none" stroke="black" strokeWidth="0.3" strokeDasharray="10,5" />
+            <circle cx="200" cy="200" r="120" fill="none" stroke="black" strokeWidth="0.3" strokeDasharray="5,5" />
+          </g>
+
+          {/* Data visualization elements */}
+          <g transform="translate(50, 350)">
+            {[...Array(20)].map((_, i) => (
+              <rect key={i} x={i * 15} y={0} width="10" 
+                height={Math.sin(i * 0.5 + progress * 0.1) * 10 + 15}
+                fill={i * 5 < progress ? "black" : "none"}
+                stroke="black" strokeWidth="0.5"
+                opacity={i * 5 < progress ? 0.8 : 0.3} />
+            ))}
+          </g>
+        </svg>
+
+        {/* Minimal progress indicator */}
+        <div className="absolute bottom-0 left-1/2 transform -translate-x-1/2 w-64">
+          <div className="relative h-[1px] bg-black/20">
+            <div 
+              className="absolute h-full bg-black transition-all duration-300"
+              style={{ width: `${progress}%` }}
+            />
+            <div 
+              className="absolute w-2 h-2 bg-black rounded-full"
+              style={{ 
+                left: `${progress}%`,
+                top: '50%',
+                transform: 'translate(-50%, -50%)'
+              }}
+            />
+          </div>
+          <div className="mt-2 text-center">
+            <span className="text-[10px] font-mono text-black/60">
+              {progress.toString().padStart(3, '0')}
+            </span>
+          </div>
         </div>
       </div>
-      
-      <div className="relative z-10 text-center">
-        {/* Logo Section */}
-        <div className="mb-8 relative">
-          <img 
-            src="/logs.png" 
-            alt="Aavishkar Kamble" 
-            className="h-16 sm:h-20 mx-auto opacity-90 drop-shadow-lg animate-float" 
-          />
-        </div>
 
-        {/* Rocket Animation */}
-        <div className="mb-8 relative h-32 flex items-center justify-center">
-          <div className="relative w-24 h-24">
-            {/* Launch Pad */}
-            <div className="absolute bottom-0 left-1/2 transform -translate-x-1/2 w-16 h-2 bg-gray-400 rounded-full opacity-50"></div>
-            
-            {/* Rocket */}
-            <div 
-              className="absolute left-1/2 transform -translate-x-1/2 transition-all duration-1000 ease-out"
-              style={{ 
-                bottom: `${rocketPosition}%`,
-                transform: `translateX(-50%) rotate(${rocketPosition * 0.5}deg)`
-              }}
-            >
-              <RocketIcon className="w-8 h-8 text-gray-700" />
-              
-              {/* Exhaust Trail */}
-              <div className="absolute top-full left-1/2 transform -translate-x-1/2">
-                <div className="w-1 bg-gradient-to-b from-gray-400 to-transparent opacity-60 animate-pulse" 
-                     style={{ height: `${Math.min(rocketPosition * 0.5, 20)}px` }}></div>
-              </div>
-            </div>
+      {/* Corner technical indicators */}
+      <div className="absolute top-4 left-4">
+        <svg width="60" height="60" viewBox="0 0 60 60">
+          <g opacity="0.4">
+            <line x1="0" y1="30" x2="60" y2="30" stroke="black" strokeWidth="0.5" />
+            <line x1="30" y1="0" x2="30" y2="60" stroke="black" strokeWidth="0.5" />
+            <circle cx="30" cy="30" r="20" fill="none" stroke="black" strokeWidth="0.5" />
+            <circle cx="30" cy="30" r="10" fill="none" stroke="black" strokeWidth="0.5" />
+            <circle cx="30" cy="30" r={progress / 5} fill="black" opacity="0.3" />
+          </g>
+        </svg>
+      </div>
 
-            {/* Stars */}
-            {Array.from({ length: 6 }).map((_, i) => (
-              <div
-                key={i}
-                className="absolute w-1 h-1 bg-gray-500 rounded-full animate-pulse"
-                style={{
-                  left: `${20 + Math.random() * 60}%`,
-                  top: `${10 + Math.random() * 40}%`,
-                  animationDelay: `${i * 0.3}s`
-                }}
-              />
+      <div className="absolute top-4 right-4">
+        <svg width="60" height="60" viewBox="0 0 60 60">
+          <g opacity="0.4">
+            {[0, 45, 90, 135].map(angle => (
+              <line key={angle} x1="30" y1="30" 
+                x2={30 + Math.cos(angle * Math.PI / 180) * 25} 
+                y2={30 + Math.sin(angle * Math.PI / 180) * 25}
+                stroke="black" strokeWidth="0.5" />
             ))}
-          </div>
-        </div>
+            <polygon points="30,10 50,30 30,50 10,30" fill="none" stroke="black" strokeWidth="0.5" />
+            <polygon points="30,20 40,30 30,40 20,30" fill="black" opacity={progress > 50 ? 0.3 : 0} />
+          </g>
+        </svg>
+      </div>
 
-        {/* Loading Text */}
-        <div className="mb-8">
-          <h1 className="text-3xl sm:text-4xl font-bold text-gray-800 mb-4 animate-slide-in-from-bottom font-display">
-            Aavishkar Kamble
-          </h1>
-          
-          <div className="h-6 flex items-center justify-center mb-6">
-            <div className="flex items-center space-x-3 animate-slide-in-from-left delay-300">
-              <span className="text-lg animate-bounce" style={{ animationDelay: '0s' }}>
-                {loadingSteps[currentStep]?.icon}
-              </span>
-              <p className="text-lg text-gray-600 font-medium">
-                {loadingSteps[currentStep]?.text}
-              </p>
-            </div>
-          </div>
-        </div>
+      <div className="absolute bottom-4 left-4">
+        <svg width="60" height="60" viewBox="0 0 60 60">
+          <g opacity="0.4">
+            <rect x="10" y="10" width="40" height="40" fill="none" stroke="black" strokeWidth="0.5" 
+              transform={`rotate(${rotation * 0.2} 30 30)`} />
+            <rect x="20" y="20" width="20" height="20" fill="none" stroke="black" strokeWidth="0.5" 
+              transform={`rotate(${-rotation * 0.3} 30 30)`} />
+            <circle cx="30" cy="30" r="3" fill="black" opacity="0.5" />
+          </g>
+        </svg>
+      </div>
 
-        {/* Progress Bar */}
-        <div className="w-80 max-w-full mx-auto mb-8 animate-slide-in-from-right delay-500">
-          <div className="relative h-2 bg-gray-200 rounded-full overflow-hidden shadow-inner">
-            <div 
-              className="h-full bg-gradient-to-r from-gray-600 to-gray-800 rounded-full transition-all duration-300 ease-out relative overflow-hidden"
-              style={{ width: `${progress}%` }}
-            >
-              {/* Shimmer Effect */}
-              <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/30 to-transparent animate-shimmer-wave"></div>
-            </div>
-          </div>
-          
-          <div className="flex justify-between mt-3 text-sm">
-            <span className="text-gray-500">Loading...</span>
-            <span className="text-gray-700 font-bold">{Math.round(progress)}%</span>
-          </div>
-        </div>
-
-        {/* Loading Steps Indicator */}
-        <div className="flex justify-center space-x-2 mb-8 animate-zoom-in delay-700">
-          {loadingSteps.map((_, index) => (
-            <div
-              key={index}
-              className={`w-2 h-2 rounded-full transition-all duration-500 ${
-                index <= currentStep 
-                  ? 'bg-gray-700 scale-125' 
-                  : 'bg-gray-300'
-              }`}
-            />
-          ))}
-        </div>
-
-        {/* Quote */}
-        <div className="animate-fade-in delay-1000">
-          <p className="text-sm text-gray-500 italic max-w-md mx-auto">
-            "Launching dreams into reality, one line of code at a time"
-          </p>
-        </div>
+      <div className="absolute bottom-4 right-4">
+        <svg width="60" height="60" viewBox="0 0 60 60">
+          <g opacity="0.4">
+            <path d="M 30 10 L 50 25 L 50 45 L 30 60 L 10 45 L 10 25 Z" 
+              fill="none" stroke="black" strokeWidth="0.5" />
+            <path d="M 30 20 L 40 27.5 L 40 37.5 L 30 45 L 20 37.5 L 20 27.5 Z" 
+              fill="black" opacity={progress > 75 ? 0.3 : 0} />
+          </g>
+        </svg>
       </div>
     </div>
   );

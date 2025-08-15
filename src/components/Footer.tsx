@@ -53,7 +53,7 @@ const Footer = () => {
             </div>
             <div className="flex space-x-4 mt-4">
               <a 
-                href="https://linkedin.com/in/aavishkar-kamble" 
+                href="https://www.linkedin.com/in/aavishkar-k-76509a235/" 
                 target="_blank" 
                 rel="noopener noreferrer"
                 className="text-gray-300 hover:text-pulse-400 transition-colors duration-200"
@@ -61,7 +61,7 @@ const Footer = () => {
                 <Linkedin className="w-5 h-5" />
               </a>
               <a 
-                href="https://github.com/aavishkarkamble" 
+                href="https://github.com/Aavishkar04" 
                 target="_blank" 
                 rel="noopener noreferrer"
                 className="text-gray-300 hover:text-pulse-400 transition-colors duration-200"
@@ -78,7 +78,7 @@ const Footer = () => {
               © {currentYear} Aavishkar Kamble. All rights reserved.
             </p>
             <p className="text-gray-400 text-sm mt-2 md:mt-0">
-              Built with ❤️ using React & Tailwind CSS
+              vibe coded this, since i am confident i am way too good at vibe coding!
             </p>
           </div>
         </div>

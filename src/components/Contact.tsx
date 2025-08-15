@@ -1,6 +1,6 @@
 import React, { useEffect, useRef } from "react";
 import { cn } from "@/lib/utils";
-import { Mail, Phone, Linkedin, Github, MapPin, Send } from "lucide-react";
+import { Mail, Phone, Linkedin, Github, MapPin, Send,FileText  } from "lucide-react";
 import { useScrollAnimation, useStaggeredScrollAnimation } from "@/hooks/useScrollAnimation";
 
 const Contact = () => {
@@ -9,7 +9,7 @@ const Contact = () => {
   // Enhanced scroll animations
   const { elementRef: headerRef, isVisible: headerVisible } = useScrollAnimation({ delay: 100 });
   const { elementRef: contentRef, isVisible: contentVisible } = useScrollAnimation({ delay: 300 });
-  const { containerRef: contactInfoRef, visibleItems: contactInfoVisible } = useStaggeredScrollAnimation(4, { delay: 150 });
+  const { containerRef: contactInfoRef, visibleItems: contactInfoVisible } = useStaggeredScrollAnimation(5, { delay: 150 });
   
   useEffect(() => {
     const observer = new IntersectionObserver(
@@ -57,13 +57,18 @@ const Contact = () => {
       icon: <Linkedin className="w-5 h-5" />,
       label: "LinkedIn",
       value: "Connect with me",
-      href: "https://linkedin.com/in/aavishkar-kamble"
+      href: "https://www.linkedin.com/in/aavishkar-k-76509a235/"
     },
     {
       icon: <Github className="w-5 h-5" />,
       label: "GitHub",
       value: "View my projects",
-      href: "https://github.com/aavishkarkamble"
+      href: "https://github.com/Aavishkar04"
+    }, {
+      icon: <FileText  className="w-5 h-5" />,
+      label: "Resume/CV",
+      value: "check my resume",
+      href: "https://drive.google.com/file/d/1loXaVrP5LI46KN2pXBCNkTzRPnSCHMBx/view?usp=sharing"
     }
   ];
 
@@ -144,7 +149,7 @@ const Contact = () => {
           )}>
             <div className="glass-card-enhanced p-6 sm:p-8 hover-lift-rotate">
               <h3 className="text-2xl font-semibold mb-6 text-gray-800">Send a Message</h3>
-              <form className="space-y-6">
+              {/* <form className="space-y-6">
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-4">
                   <div>
                     <label htmlFor="name" className="block text-sm font-medium text-gray-700 mb-2">
@@ -205,7 +210,78 @@ const Contact = () => {
                   <Send className="w-4 h-4" />
                   <span>Send Message</span>
                 </button>
-              </form>
+              </form> */}
+
+<form 
+  className="space-y-6"
+  action="https://formsubmit.co/aavishkarkamble04@gmail.com" 
+  method="POST"
+>
+  <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-4">
+    <div>
+      <label htmlFor="name" className="block text-sm font-medium text-gray-700 mb-2">
+        Name
+      </label>
+      <input
+        type="text"
+        id="name"
+        name="name"
+        className="w-full px-3 sm:px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-pulse-500 focus:border-transparent transition-colors duration-200 text-base"
+        placeholder="Your Name"
+        required
+      />
+    </div>
+    <div>
+      <label htmlFor="email" className="block text-sm font-medium text-gray-700 mb-2">
+        Email
+      </label>
+      <input
+        type="email"
+        id="email"
+        name="email"
+        className="w-full px-3 sm:px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-pulse-500 focus:border-transparent transition-colors duration-200 text-base"
+        placeholder="your.email@example.com"
+        required
+      />
+    </div>
+  </div>
+  
+  <div>
+    <label htmlFor="subject" className="block text-sm font-medium text-gray-700 mb-2">
+      Subject
+    </label>
+    <input
+      type="text"
+      id="subject"
+      name="subject"
+      className="w-full px-3 sm:px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-pulse-500 focus:border-transparent transition-colors duration-200 text-base"
+      placeholder="Project Discussion"
+    />
+  </div>
+  
+  <div>
+    <label htmlFor="message" className="block text-sm font-medium text-gray-700 mb-2">
+      Message
+    </label>
+    <textarea
+      id="message"
+      name="message"
+      rows={5}
+      className="w-full px-3 sm:px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-pulse-500 focus:border-transparent transition-colors duration-200 resize-none text-base"
+      placeholder="Tell me about your project or just say hello!"
+      required
+    ></textarea>
+  </div>
+  
+  <button
+    type="submit"
+    className="w-full flex items-center justify-center space-x-2 glass-button text-white font-medium py-3 px-6 rounded-lg transition-all duration-300 shadow-md hover:shadow-lg transform hover:scale-[1.02] active:scale-[0.98]"
+  >
+    <Send className="w-4 h-4" />
+    <span>Send Message</span>
+  </button>
+</form>
+
             </div>
           </div>
         </div>

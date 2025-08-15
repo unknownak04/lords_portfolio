@@ -40,7 +40,7 @@ const Navbar = () => {
       className={cn(
         "fixed top-0 left-0 right-0 z-50 py-2 sm:py-3 md:py-4 transition-all duration-300",
         isScrolled 
-          ? "bg-white/80 dark:bg-slate-900/80 backdrop-blur-md shadow-sm dark:shadow-slate-800/20" 
+          ? "bg-white/80 backdrop-blur-md shadow-sm" 
           : "bg-transparent"
       )}
     >
@@ -52,12 +52,12 @@ const Navbar = () => {
             e.preventDefault();
             scrollToTop();
           }}
-          aria-label="Pulse Robot"
+          aria-label="great aavishkar"
         >
           <img 
-            src="/logs.png" 
+            src="/augus.png" 
             alt="Aavishkar Kamble" 
-            className="h-7 sm:h-8" 
+            className="h-10 sm:h-12 md:h-14 w-auto" 
           />
         </a>
 

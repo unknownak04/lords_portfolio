@@ -13,28 +13,22 @@ import { useTheme } from "@/contexts/ThemeContext";
 
 const Index = () => {
   const [isLoading, setIsLoading] = useState(true);
-  const [showThemeSelector, setShowThemeSelector] = useState(true);
   const { setTheme } = useTheme();
 
-  const handleThemeSelect = (selectedTheme: 'light' | 'dark') => {
-    setTheme(selectedTheme);
-    setShowThemeSelector(false);
-    
-    // Add a small delay before showing the main content
+  const handleThemeSelect = () => {
+    setTheme('light'); // Always set to light mode
     setTimeout(() => {
       setIsLoading(false);
-    }, 1000);
+    }, 500);
   };
 
-  // Skip theme selection if user has already selected a theme
+  // Auto-load after a short delay
   useEffect(() => {
-    const savedTheme = localStorage.getItem('theme');
-    if (savedTheme) {
-      setShowThemeSelector(false);
-      setTimeout(() => {
-        setIsLoading(false);
-      }, 2000);
-    }
+    const timer = setTimeout(() => {
+      handleThemeSelect();
+    }, 2000);
+
+    return () => clearTimeout(timer);
   }, []);
 
   // Initialize intersection observer to detect when elements enter viewport
@@ -82,7 +76,7 @@ const Index = () => {
     });
   }, []);
 
-  if (isLoading || showThemeSelector) {
+  if (isLoading) {
     return <PageLoader onThemeSelect={handleThemeSelect} />;
   }
 

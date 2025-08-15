@@ -1999,6 +1999,522 @@
 
 
 
+// "use client";
+
+// import React, { useCallback, useEffect, useMemo, useRef, useState } from "react";
+// import {
+//   ChevronLeft,
+//   ChevronRight,
+//   Github,
+//   ExternalLink,
+//   Code,
+//   Database,
+//   Brain,
+//   Smartphone,
+//   Globe,
+//   Zap,
+//   Info,
+// } from "lucide-react";
+// import { cn } from "@/lib/utils";
+// import { useScrollAnimation } from "@/hooks/useScrollAnimation";
+
+// /* -------------------------------------------------------------
+//    Doodly header + CTA (playful, no explicit "Shinchan" mention)
+// --------------------------------------------------------------*/
+// const DoodleMascot: React.FC<{ className?: string }> = ({ className }) => (
+//   <svg className={className} viewBox="0 0 64 64" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden>
+//     <path d="M6 46c10-12 24-14 38-6" stroke="#fff" strokeWidth="2.6" strokeLinecap="round" strokeLinejoin="round" opacity="0.95" />
+//     <circle cx="20" cy="24" r="2.6" fill="#fff" />
+//     <circle cx="34" cy="24" r="2.6" fill="#fff" />
+//     <path d="M14 34c5 6 14 6 20 0" stroke="#fff" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" opacity="0.9" />
+//   </svg>
+// );
+
+// const BigAskHeader: React.FC = () => {
+//   return (
+//     <div className="text-center mb-8 sm:mb-12 relative">
+//       <div className="inline-flex items-center gap-4 justify-center mb-3">
+//         <div className="w-12 h-12 rounded-full flex items-center justify-center bg-gradient-to-r from-orange-400 to-orange-600 text-white shadow-lg transform transition-transform duration-300 hover:scale-110 animate-pulse">
+//           <DoodleMascot className="w-6 h-6" />
+//         </div>
+//         <div className="text-left">
+//           <div className="text-xs font-semibold text-orange-600 uppercase tracking-wide">Portfolio</div>
+//           <h1 className="text-2xl sm:text-3xl font-display font-bold leading-tight">
+//             Please look at my projects <span className="text-orange-600">— hire me</span>
+//           </h1>
+//           <div className="mt-1 h-6">
+//             <svg className="w-56 h-6" viewBox="0 0 220 24" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden>
+//               <path
+//                 d="M2 12 Q60 0 110 12 T218 12"
+//                 stroke="#FB923C"
+//                 strokeWidth="3"
+//                 strokeLinecap="round"
+//                 strokeLinejoin="round"
+//                 className="animate-draw"
+//               />
+//             </svg>
+//           </div>
+//           <p className="text-sm text-gray-600 mt-1">
+//             Compact previews, details visible. Open to internships & junior roles.
+//           </p>
+//         </div>
+//       </div>
+//       <div className="mt-3 flex items-center justify-center gap-3">
+//         <a
+//           href="#contact"
+//           className="inline-flex items-center gap-2 px-5 py-2 bg-gradient-to-r from-orange-500 to-orange-600 text-white rounded-full shadow-md transform hover:scale-105 transition"
+//         >
+//           Let’s talk
+//         </a>
+//         <a
+//           href="#projects"
+//           className="inline-flex items-center gap-2 px-4 py-2 border border-orange-300 rounded-full text-orange-700 hover:bg-orange-50 transition"
+//         >
+//           Browse all
+//         </a>
+//       </div>
+
+//       {/* keyframes for underline */}
+//       <style jsx>{`
+//         @keyframes draw {
+//           from { stroke-dasharray: 300; stroke-dashoffset: 300; }
+//           to { stroke-dasharray: 300; stroke-dashoffset: 0; }
+//         }
+//         .animate-draw { animation: draw 900ms cubic-bezier(.2,.9,.3,1) forwards; }
+//       `}</style>
+//     </div>
+//   );
+// };
+
+// /* -------------------------------------------------------------
+//    Types & small components
+// --------------------------------------------------------------*/
+// interface Project {
+//   id: number;
+//   title: string;
+//   description: string;
+//   technologies: string[];
+//   features: string[];
+//   image: string;
+//   icon: React.ReactNode;
+//   color: string;
+//   gradient: string;
+//   category: string;
+// }
+
+// const TechTag: React.FC<{ label: string; highlighted?: boolean }> = ({ label, highlighted }) => (
+//   <span
+//     className={cn(
+//       "inline-flex items-center gap-2 text-[12px] px-2 py-0.5 rounded-full border select-none transition-transform duration-200",
+//       highlighted
+//         ? "bg-orange-50 text-orange-800 border-orange-200 animate-pulse"
+//         : "bg-gray-50 text-gray-700 border-gray-200 hover:scale-105"
+//     )}
+//   >
+//     <svg className="flex-shrink-0" width="6" height="6" viewBox="0 0 6 6" xmlns="http://www.w3.org/2000/svg" aria-hidden>
+//       <circle cx="3" cy="3" r="3" fill={highlighted ? "#FB923C" : "#CBD5E1"} />
+//     </svg>
+//     {label}
+//   </span>
+// );
+
+// /* -------------------------------------------------------------
+//    Main component
+// --------------------------------------------------------------*/
+// const Projects: React.FC = () => {
+//   const [currentIndex, setCurrentIndex] = useState<number>(0);
+//   const [isAnimating, setIsAnimating] = useState(false);
+//   const isAnimatingRef = useRef(false);
+//   const [isMobile, setIsMobile] = useState(false);
+//   const [isLoading, setIsLoading] = useState(true);
+//   const [mounted, setMounted] = useState(false);
+
+//   const touchStartX = useRef<number | null>(null);
+//   const touchDeltaX = useRef(0);
+
+//   const { elementRef: headerRef, isVisible: headerVisible } = useScrollAnimation({ delay: 100 });
+
+//   const projects: Project[] = useMemo(
+//     () => [
+//       {
+//         id: 1,
+//         title: "News Website",
+//         description: "Real-time news platform with efficient fetching and polished UI.",
+//         technologies: ["Express.js", "React.js", "Tailwind", "Axios"],
+//         features: ["Third-party APIs", "Optimized fetch", "Responsive components"],
+//         image: "https://images.unsplash.com/photo-1504711434969-e33886168f5c?w=1200&h=700&fit=crop&auto=format&q=80",
+//         icon: <Code className="w-4 h-4" />,
+//         color: "from-orange-400 to-orange-600",
+//         gradient: "bg-gradient-to-br from-orange-50 to-orange-100",
+//         category: "Web",
+//       },
+//       {
+//         id: 2,
+//         title: "Salary Predictor",
+//         description: "ML-backed salary predictions with interactive visualizations.",
+//         technologies: ["Python", "Streamlit", "RandomForest", "Pandas"],
+//         features: ["Model pipelines", "Plotly charts", "User calibration"],
+//         image: "https://images.unsplash.com/photo-1551288049-bebda4e38f71?w=1200&h=700&fit=crop&auto=format&q=80",
+//         icon: <Brain className="w-4 h-4" />,
+//         color: "from-orange-500 to-red-500",
+//         gradient: "bg-gradient-to-br from-orange-50 to-red-50",
+//         category: "Machine Learning",
+//       },
+//       {
+//         id: 3,
+//         title: "E-Commerce Platform",
+//         description: "Scalable store with Stripe payments and admin dashboard.",
+//         technologies: ["React.js", "Node.js", "MongoDB", "Stripe"],
+//         features: ["Secure checkout", "Inventory", "Search & filters"],
+//         image: "https://images.unsplash.com/photo-1556742049-0cfed4f6a45d?w=1200&h=700&fit=crop&auto=format&q=80",
+//         icon: <Database className="w-4 h-4" />,
+//         color: "from-orange-600 to-amber-600",
+//         gradient: "bg-gradient-to-br from-orange-50 to-amber-50",
+//         category: "Full Stack",
+//       },
+//       {
+//         id: 4,
+//         title: "Task Manager",
+//         description: "Realtime board with drag & drop and team permissions.",
+//         technologies: ["React.js", "Socket.io", "Tailwind", "Redux"],
+//         features: ["Realtime sync", "Kanban UX", "Team roles"],
+//         image: "https://images.unsplash.com/photo-1611224923853-80b023f02d71?w=1200&h=700&fit=crop&auto=format&q=80",
+//         icon: <Smartphone className="w-4 h-4" />,
+//         color: "from-amber-500 to-orange-500",
+//         gradient: "bg-gradient-to-br from-amber-50 to-orange-50",
+//         category: "Productivity",
+//       },
+//       {
+//         id: 5,
+//         title: "Weather Analytics",
+//         description: "Maps & trends with historical analysis and alerts.",
+//         technologies: ["React.js", "Chart.js", "PWA", "TypeScript"],
+//         features: ["Map layers", "Historical trends", "Push alerts"],
+//         image: "https://images.unsplash.com/photo-1504608524841-42fe6f032b4b?w=1200&h=700&fit=crop&auto=format&q=80",
+//         icon: <Globe className="w-4 h-4" />,
+//         color: "from-orange-400 to-yellow-500",
+//         gradient: "bg-gradient-to-br from-orange-50 to-yellow-50",
+//         category: "Data",
+//       },
+//       {
+//         id: 6,
+//         title: "Social Dashboard",
+//         description: "Scheduling, analytics and cross-posting for creators.",
+//         technologies: ["React.js", "Node.js", "Redis", "Cron"],
+//         features: ["Scheduler", "Engagement analytics", "Multi-platform"],
+//         image: "https://images.unsplash.com/photo-1611162617474-5b21e879e113?w=1200&h=700&fit=crop&auto=format&q=80",
+//         icon: <Zap className="w-4 h-4" />,
+//         color: "from-red-500 to-orange-500",
+//         gradient: "bg-gradient-to-br from-red-50 to-orange-50",
+//         category: "Social",
+//       },
+//     ],
+//     []
+//   );
+
+//   useEffect(() => {
+//     const check = () => setIsMobile(window.innerWidth < 900);
+//     check();
+//     window.addEventListener("resize", check);
+//     return () => window.removeEventListener("resize", check);
+//   }, []);
+
+//   useEffect(() => {
+//     const t = setTimeout(() => setIsLoading(false), 420);
+//     const m = setTimeout(() => setMounted(true), 80);
+//     return () => {
+//       clearTimeout(t);
+//       clearTimeout(m);
+//     };
+//   }, []);
+
+//   const startAnimating = (duration = 420) => {
+//     setIsAnimating(true);
+//     isAnimatingRef.current = true;
+//     window.setTimeout(() => {
+//       setIsAnimating(false);
+//       isAnimatingRef.current = false;
+//     }, duration);
+//   };
+
+//   const goToNext = useCallback(() => {
+//     if (isAnimatingRef.current || projects.length <= 1) return;
+//     startAnimating();
+//     setCurrentIndex((p) => (p + 1) % projects.length);
+//   }, [projects.length]);
+
+//   const goToPrev = useCallback(() => {
+//     if (isAnimatingRef.current || projects.length <= 1) return;
+//     startAnimating();
+//     setCurrentIndex((p) => (p === 0 ? projects.length - 1 : p - 1));
+//   }, [projects.length]);
+
+//   const goToSlide = useCallback(
+//     (index: number) => {
+//       if (isAnimatingRef.current || index === currentIndex || index < 0 || index >= projects.length) return;
+//       startAnimating();
+//       setCurrentIndex(index);
+//     },
+//     [currentIndex, projects.length]
+//   );
+
+//   // keyboard
+//   useEffect(() => {
+//     const handler = (e: KeyboardEvent) => {
+//       if (e.key === "ArrowRight") goToNext();
+//       if (e.key === "ArrowLeft") goToPrev();
+//     };
+//     window.addEventListener("keydown", handler);
+//     return () => window.removeEventListener("keydown", handler);
+//   }, [goToNext, goToPrev]);
+
+//   // swipe
+//   useEffect(() => {
+//     const onTouchStart = (e: TouchEvent) => {
+//       touchDeltaX.current = 0;
+//       touchStartX.current = e.touches?.[0]?.clientX ?? null;
+//     };
+//     const onTouchMove = (e: TouchEvent) => {
+//       if (touchStartX.current == null) return;
+//       touchDeltaX.current = (e.touches?.[0]?.clientX ?? 0) - (touchStartX.current ?? 0);
+//     };
+//     const onTouchEnd = () => {
+//       if (touchStartX.current == null) return;
+//       const delta = touchDeltaX.current;
+//       const threshold = 60;
+//       if (delta > threshold) goToPrev();
+//       else if (delta < -threshold) goToNext();
+//       touchStartX.current = null;
+//       touchDeltaX.current = 0;
+//     };
+
+//     window.addEventListener("touchstart", onTouchStart, { passive: true });
+//     window.addEventListener("touchmove", onTouchMove, { passive: true });
+//     window.addEventListener("touchend", onTouchEnd);
+//     return () => {
+//       window.removeEventListener("touchstart", onTouchStart);
+//       window.removeEventListener("touchmove", onTouchMove);
+//       window.removeEventListener("touchend", onTouchEnd);
+//     };
+//   }, [goToNext, goToPrev]);
+
+//   const visible = useMemo(() => {
+//     if (projects.length === 0) return [];
+//     if (isMobile) return [{ ...projects[currentIndex], position: "center", offset: 0 }];
+//     const prev = currentIndex === 0 ? projects.length - 1 : currentIndex - 1;
+//     const next = (currentIndex + 1) % projects.length;
+//     return [
+//       { ...projects[prev], position: "left", offset: -1 },
+//       { ...projects[currentIndex], position: "center", offset: 0 },
+//       { ...projects[next], position: "right", offset: 1 },
+//     ];
+//   }, [currentIndex, isMobile, projects]);
+// {/* Playful Title Section */}
+// <div className="text-center relative mb-12 px-4">
+//   {/* Doodle-like squiggles */}
+//   <div className="absolute left-10 top-0 w-16 h-16 text-yellow-400 opacity-50 animate-bounce">
+//     <svg viewBox="0 0 64 64" fill="none" stroke="currentColor" strokeWidth="3">
+//       <path d="M10 32 Q 32 10, 54 32 Q 32 54, 10 32 Z" />
+//     </svg>
+//   </div>
+//   <div className="absolute right-10 top-4 w-12 h-12 text-pink-400 opacity-70 animate-spin-slow">
+//     <svg viewBox="0 0 64 64" fill="none" stroke="currentColor" strokeWidth="3">
+//       <circle cx="32" cy="32" r="28" />
+//     </svg>
+//   </div>
+
+//   {/* Title text */}
+//   <h2 className="text-3xl md:text-4xl font-extrabold tracking-tight text-gray-800 dark:text-gray-100">
+//     ✨ Please take a peek at my projects — and maybe hire me? ✨
+//   </h2>
+//   <p className="mt-3 text-lg text-gray-600 dark:text-gray-300 max-w-2xl mx-auto">
+//     Crafted with curiosity, a pinch of chaos, and plenty of ❤️
+//   </p>
+// </div>
+
+//   if (isLoading) {
+//     return (
+//       <section id="projects" className="py-12 relative bg-gradient-to-br from-gray-50 overflow-hidden">
+//         <div className="section-container">
+//           <div className="h-24 rounded-xl bg-white/40 animate-pulse" />
+//         </div>
+//       </section>
+//     );
+//   }
+
+//   return (
+//     <section id="projects" className="py-12 relative bg-gradient-to-br from-gray-50 via-orange-50/30 to-orange-100/20 overflow-hidden">
+//       {/* background doodles */}
+//       <svg className="absolute -left-8 top-10 opacity-10 pointer-events-none" width="220" height="200" viewBox="0 0 220 200" fill="none" aria-hidden>
+//         <path d="M10 150 Q110 10 210 150" stroke="#F59E0B" strokeWidth="6" strokeLinecap="round" strokeLinejoin="round" />
+//       </svg>
+//       <svg className="absolute right-[-40px] bottom-[-20px] opacity-10 pointer-events-none" width="260" height="220" viewBox="0 0 260 220" fill="none" aria-hidden>
+//         <path d="M20 170 Q130 40 240 170" stroke="#FDBA74" strokeWidth="6" strokeLinecap="round" strokeLinejoin="round" />
+//       </svg>
+
+//       <div className="section-container relative z-10">
+//         {/* Header with doodly title */}
+//         <div
+//           ref={headerRef}
+//           className={cn(
+//             "transition-all duration-700",
+//             headerVisible ? "opacity-100 translate-y-0" : "opacity-0 -translate-y-2"
+//           )}
+//         >
+//           <BigAskHeader />
+//         </div>
+
+//         <div className="relative max-w-7xl mx-auto">
+//           {/* arrows */}
+//           {!isMobile && projects.length > 1 && (
+//             <>
+//               <button
+//                 onClick={goToPrev}
+//                 disabled={isAnimating}
+//                 aria-label="Previous project"
+//                 className="absolute left-2 top-1/2 -translate-y-1/2 z-20 w-12 h-12 bg-white/95 rounded-full shadow-md hover:scale-105 transition"
+//               >
+//                 <ChevronLeft className="w-5 h-5 text-gray-700" />
+//               </button>
+//               <button
+//                 onClick={goToNext}
+//                 disabled={isAnimating}
+//                 aria-label="Next project"
+//                 className="absolute right-2 top-1/2 -translate-y-1/2 z-20 w-12 h-12 bg-white/95 rounded-full shadow-md hover:scale-105 transition"
+//               >
+//                 <ChevronRight className="w-5 h-5 text-gray-700" />
+//               </button>
+//             </>
+//           )}
+
+//           {/* cards row — slightly smaller & always extended */}
+//           <div className="flex justify-center">
+//             <div className="grid grid-cols-1 md:grid-cols-3 gap-6 w-full max-w-6xl items-start">
+//               {visible.map((p, i) => {
+//                 const isCenter = p.position === "center";
+//                 return (
+//                   <article
+//                     key={`${p.id}-${p.position}`}
+//                     className={cn(
+//                       "bg-white rounded-2xl overflow-hidden shadow transform transition-all duration-300",
+//                       isCenter ? "scale-[1.02] shadow-lg" : "scale-[0.98] opacity-90",
+//                       mounted ? "opacity-100 translate-y-0" : "opacity-0 translate-y-6"
+//                     )}
+//                     style={{
+//                       maxWidth: isCenter ? 420 : 360, // **slightly smaller** than earlier
+//                       transitionDelay: `${i * 80}ms`,
+//                     }}
+//                     aria-labelledby={`project-${p.id}-title`}
+//                   >
+//                     {/* image */}
+//                     <div className="relative h-44 overflow-hidden">
+//                       <img src={p.image} alt={p.title} className="w-full h-full object-cover" loading="lazy" />
+//                       <div className="absolute inset-0 bg-gradient-to-br from-transparent via-black/0 to-black/10" aria-hidden />
+//                       <div className="absolute top-3 left-3 px-2 py-1 bg-white/95 rounded-full text-xs font-semibold text-orange-700 border border-orange-100">
+//                         {p.category}
+//                       </div>
+//                       <div className="absolute right-3 bottom-3 rounded-full bg-white/80 px-2 py-1 text-xs flex items-center gap-2 border">
+//                         <span className="text-xs">{p.icon}</span>
+//                         <span className="text-xs font-medium">Preview</span>
+//                       </div>
+//                     </div>
+
+//                     {/* content — details visible */}
+//                     <div className="p-4 sm:p-5">
+//                       <div className="flex items-start gap-3">
+//                         <div className={cn("w-12 h-12 rounded-lg flex items-center justify-center text-white shadow", `bg-gradient-to-r ${p.color}`)}>
+//                           {p.icon}
+//                         </div>
+//                         <div className="flex-1 min-w-0">
+//                           <div className="flex items-center gap-2">
+//                             <h3 id={`project-${p.id}-title`} className="text-lg font-semibold text-gray-800 truncate">
+//                               {p.title}
+//                             </h3>
+//                             <div className="ml-auto text-xs text-gray-500 flex items-center gap-1">
+//                               <Info className="w-4 h-4" /> Details visible
+//                             </div>
+//                           </div>
+//                           <p className="text-sm text-gray-500 mt-1 line-clamp-2">{p.description}</p>
+//                         </div>
+//                       </div>
+
+//                       {/* tech tags */}
+//                       <div className="mt-3 flex flex-wrap gap-2">
+//                         {p.technologies.map((t, idx) => (
+//                           <TechTag key={`${t}-${idx}`} label={t} highlighted={idx < 2} />
+//                         ))}
+//                       </div>
+
+//                       {/* details (always open but compact) */}
+//                       <div className="mt-3 text-sm text-gray-700 overflow-hidden max-h-[160px]">
+//                         <div className="pt-2">
+//                           <h4 className="text-xs font-semibold text-gray-600 mb-1">Key features</h4>
+//                           <ul className="text-xs space-y-1">
+//                             {p.features.map((f, fi) => (
+//                               <li key={fi} className="flex items-start gap-2">
+//                                 <span className="text-orange-500 mt-1">•</span>
+//                                 <span className="leading-tight">{f}</span>
+//                               </li>
+//                             ))}
+//                           </ul>
+
+//                           <div className="mt-3 flex gap-2 items-center">
+//                             <a className="flex items-center gap-2 px-3 py-1.5 bg-gray-800 text-white rounded-md text-sm hover:scale-105 transition" href="#" role="button">
+//                               <Github className="w-4 h-4" /> Code
+//                             </a>
+//                             <a className="flex items-center gap-2 px-3 py-1.5 border rounded-md text-sm text-orange-700 hover:bg-orange-50 transition" href="#" role="button">
+//                               <ExternalLink className="w-4 h-4" /> Live
+//                             </a>
+//                           </div>
+//                         </div>
+//                       </div>
+//                     </div>
+//                   </article>
+//                 );
+//               })}
+//             </div>
+//           </div>
+
+//           {/* indicators */}
+//           <div className="flex items-center justify-center gap-3 mt-6">
+//             {projects.map((_, i) => (
+//               <button
+//                 key={i}
+//                 onClick={() => goToSlide(i)}
+//                 disabled={isAnimating}
+//                 aria-label={`Go to project ${i + 1}`}
+//                 className={cn(
+//                   "w-3 h-3 rounded-full transition-transform",
+//                   i === currentIndex ? "scale-125 bg-gradient-to-r from-orange-500 to-orange-600 shadow" : "bg-gray-200"
+//                 )}
+//               />
+//             ))}
+//           </div>
+
+//           <div className="text-center mt-3 text-sm text-gray-500">
+//             <strong className="text-orange-600">{currentIndex + 1}</strong> / <strong>{projects.length}</strong>
+//           </div>
+
+//           {/* mobile nav */}
+//           {isMobile && projects.length > 1 && (
+//             <div className="flex justify-center gap-3 mt-4">
+//               <button onClick={goToPrev} disabled={isAnimating} className="px-3 py-2 bg-white rounded-md shadow">
+//                 Prev
+//               </button>
+//               <button onClick={goToNext} disabled={isAnimating} className="px-3 py-2 bg-white rounded-md shadow">
+//                 Next
+//               </button>
+//             </div>
+//           )}
+//         </div>
+//       </div>
+//     </section>
+//   );
+// };
+
+// export default Projects;
+
+
 "use client";
 
 import React, { useCallback, useEffect, useMemo, useRef, useState } from "react";
@@ -2016,10 +2532,11 @@ import {
   Info,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
-import { useScrollAnimation } from "@/hooks/useScrollAnimation";
 
 /* -------------------------------------------------------------
    Doodly header + CTA (playful, no explicit "Shinchan" mention)
+   NOTE: merged the playful title into this header to avoid double
+   header spacing that pushed the cards down.
 --------------------------------------------------------------*/
 const DoodleMascot: React.FC<{ className?: string }> = ({ className }) => (
   <svg className={className} viewBox="0 0 64 64" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden>
@@ -2032,16 +2549,31 @@ const DoodleMascot: React.FC<{ className?: string }> = ({ className }) => (
 
 const BigAskHeader: React.FC = () => {
   return (
-    <div className="text-center mb-8 sm:mb-12 relative">
+    <div className="text-center mb-4 sm:mb-6 relative">
+      {/* playful ornaments */}
+      <div className="absolute left-6 top-0 w-12 h-12 text-yellow-400 opacity-50 animate-bounce pointer-events-none">
+        <svg viewBox="0 0 64 64" fill="none" stroke="currentColor" strokeWidth="3" aria-hidden>
+          <path d="M10 32 Q 32 10, 54 32 Q 32 54, 10 32 Z" />
+        </svg>
+      </div>
+      <div className="absolute right-8 top-3 w-10 h-10 text-pink-400 opacity-70 animate-spin-slow pointer-events-none">
+        <svg viewBox="0 0 64 64" fill="none" stroke="currentColor" strokeWidth="3" aria-hidden>
+          <circle cx="32" cy="32" r="28" />
+        </svg>
+      </div>
+
       <div className="inline-flex items-center gap-4 justify-center mb-3">
         <div className="w-12 h-12 rounded-full flex items-center justify-center bg-gradient-to-r from-orange-400 to-orange-600 text-white shadow-lg transform transition-transform duration-300 hover:scale-110 animate-pulse">
           <DoodleMascot className="w-6 h-6" />
         </div>
         <div className="text-left">
           <div className="text-xs font-semibold text-orange-600 uppercase tracking-wide">Portfolio</div>
+
+          {/* <-- Using the title text you gave earlier exactly --> */}
           <h1 className="text-2xl sm:text-3xl font-display font-bold leading-tight">
-            Please look at my projects <span className="text-orange-600">— hire me</span>
+            ✨ Please take a peek at my projects — and maybe hire me? ✨
           </h1>
+
           <div className="mt-1 h-6">
             <svg className="w-56 h-6" viewBox="0 0 220 24" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden>
               <path
@@ -2055,10 +2587,11 @@ const BigAskHeader: React.FC = () => {
             </svg>
           </div>
           <p className="text-sm text-gray-600 mt-1">
-            Compact previews, details visible. Open to internships & junior roles.
+            Crafted with curiosity, a pinch of chaos, and plenty of ❤️
           </p>
         </div>
       </div>
+
       <div className="mt-3 flex items-center justify-center gap-3">
         <a
           href="#contact"
@@ -2074,7 +2607,6 @@ const BigAskHeader: React.FC = () => {
         </a>
       </div>
 
-      {/* keyframes for underline */}
       <style jsx>{`
         @keyframes draw {
           from { stroke-dasharray: 300; stroke-dashoffset: 300; }
@@ -2128,11 +2660,10 @@ const Projects: React.FC = () => {
   const [isMobile, setIsMobile] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
   const [mounted, setMounted] = useState(false);
+  const [headerVisible, setHeaderVisible] = useState(true); // Always show header
 
   const touchStartX = useRef<number | null>(null);
   const touchDeltaX = useRef(0);
-
-  const { elementRef: headerRef, isVisible: headerVisible } = useScrollAnimation({ delay: 100 });
 
   const projects: Project[] = useMemo(
     () => [
@@ -2331,14 +2862,11 @@ const Projects: React.FC = () => {
       </svg>
 
       <div className="section-container relative z-10">
-        {/* Header with doodly title */}
-        <div
-          ref={headerRef}
-          className={cn(
-            "transition-all duration-700",
-            headerVisible ? "opacity-100 translate-y-0" : "opacity-0 -translate-y-2"
-          )}
-        >
+        {/* Fixed header - always visible */}
+        <div className={cn(
+          "transition-all duration-700",
+          mounted ? "opacity-100 translate-y-0" : "opacity-0 -translate-y-2"
+        )}>
           <BigAskHeader />
         </div>
 
@@ -2379,7 +2907,7 @@ const Projects: React.FC = () => {
                       mounted ? "opacity-100 translate-y-0" : "opacity-0 translate-y-6"
                     )}
                     style={{
-                      maxWidth: isCenter ? 420 : 360, // **slightly smaller** than earlier
+                      maxWidth: isCenter ? 420 : 360,
                       transitionDelay: `${i * 80}ms`,
                     }}
                     aria-labelledby={`project-${p.id}-title`}

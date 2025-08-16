@@ -206,7 +206,7 @@ const About = () => {
       institution: "Vasantdada Patil Pratishthan's College of Engineering, Mumbai",
       location: "Mumbai University",
       year: "2021-2025",
-      gpa: "7.98 CGPA",
+      gpa: "8.0 CGPA",
       isLatest: true
     },
     {

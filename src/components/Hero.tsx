@@ -252,7 +252,7 @@ const Hero = () => {
 
             >
 
-              Computer Science Graduate specializing in MERN Stack, Machine Learning, and modern web technologies.Also a great vibe coder
+              Computer Science Graduate specializing in MERN Stack, Machine Learning, and modern web technologies.Also a great vibe coder 
 
             </p>
 
